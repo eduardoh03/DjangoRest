@@ -4,7 +4,6 @@ from .models import Curso, Avaliacao
 
 
 class AvaliacaoSerializer(serializers.ModelSerializer):
-
     class Meta:
         extra_kwargs = {
             'email': {'write_only': True}
@@ -23,6 +22,14 @@ class AvaliacaoSerializer(serializers.ModelSerializer):
 
 
 class CursoSerializer(serializers.ModelSerializer):
+    """Nested Relationship -> bom para relacionamentos pequenos, como OneToOne"""
+    # avaliacoes = AvaliacaoSerializer(many=True, read_only=True)
+    """HyperLinked Related Field -> gera um hyperlink"""
+    """view-name -> por esta usando ViewSet, é preciso passar o campo avaliacao (criado automaticamente) + detail
+        que são os detalhes da avaliacao (é preciso ser especificamente (detail)"""
+    # avaliacoes = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='avaliacao-detail')
+    """Primary Key Related Field -> mostra somente a PK do objeto"""
+    avaliacoes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Curso
@@ -31,5 +38,6 @@ class CursoSerializer(serializers.ModelSerializer):
             'titulo',
             'url',
             'criacao',
-            'ativo'
+            'ativo',
+            'avaliacoes'
         )

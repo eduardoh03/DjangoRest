@@ -1,19 +1,18 @@
+"""
+API V1
+"""
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework.generics import get_object_or_404
 
 """V2"""
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Curso, Avaliacao
 from .serializers import CursoSerializer, AvaliacaoSerializer
-
-"""
-API V1
-"""
 
 
 class CursosAPIView(generics.ListCreateAPIView):
@@ -63,6 +62,13 @@ class CursoViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class AvaliacaoViewSet(viewsets.ModelViewSet):
+# class AvaliacaoViewSet(viewsets.ModelViewSet):
+#     queryset = Avaliacao.objects.all()
+#     serializer_class = AvaliacaoSerializer
+
+class AvaliacaoViewSet(mixins.CreateModelMixin,
+                       mixins.RetrieveModelMixin,
+                       mixins.ListModelMixin,
+                       viewsets.GenericViewSet):
     queryset = Avaliacao.objects.all()
     serializer_class = AvaliacaoSerializer
